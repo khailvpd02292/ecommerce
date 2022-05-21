@@ -3,9 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\Auth\LoginController as UserLoginController;
+use App\Http\Controllers\User\ShoppingController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginControlle;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\UserController as UController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +49,13 @@ Route::group(['prefix' => 'admin'], function () {
             Route::delete('/delete/{id}', [ProductController::class, 'destroy']);
         
         });
+
+        Route::group(['prefix' => 'user'], function () {
+
+            Route::get('/list', [UController::class, 'index']);
+            Route::get('/detail/{id}', [UController::class, 'show']);
+        
+        });
     });
 
 });
@@ -61,6 +70,13 @@ Route::group(['prefix' => 'user'], function () {
     Route::group(['middleware' => ['assign.guard:users']], function () {
 
         Route::get('/me', [UserLoginController::class, 'me']);
+        Route::get('/cart', [ShoppingController::class, 'index']);
+        Route::group(['prefix' => 'cart'], function () {
+
+            Route::post('/add', [ShoppingController::class, 'create']);
+            Route::post('/update', [ShoppingController::class, 'update']);
+            Route::delete('/delete/{id}', [ShoppingController::class, 'destroy']);
+        });
 
     });
 

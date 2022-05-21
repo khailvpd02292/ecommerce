@@ -61,7 +61,7 @@ class AssignGuard extends Middleware
             return response()->json([
                 "success" => false,
                 "message" => 'Token is Invalid'
-            ]);
+            ], 401);
         }
     }
 }

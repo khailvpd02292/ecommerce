@@ -18,7 +18,17 @@ class Cart extends Model
      */
     protected $fillable = [
         'user_id',
-        'pre_order_id',
         'total_price'
     ];
+
+    
+    public function getCart($user_id) {
+        $result = $this->select('*', 'cart_items.*')
+                        ->join('cart_items', 'cart.id', '=', 'cart_items.cart_id')
+                        ->where('user_id' , $user_id)
+                        ->orderBy('updated_at', 'desc')
+                        ->get();
+
+        return $result;
+    }
 }

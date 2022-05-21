@@ -20,8 +20,7 @@ class CreateOrdersTable extends Migration
             $table->string('email')->nullable();
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
-            $table->string('pre_order_id')->nullable();
-            $table->decimal('total', 12, 2)->nullable();
+            $table->bigInteger('total')->nullable();
             $table->string('payment_method')->nullable();
             $table->timestamp('payment_date')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -49,7 +49,7 @@ class LoginController extends BaseController
             return $this->sendSuccessResponse(null, __('app.action_success', ['action' => 'Logout', 'attribute' => __('app.user')]));
         } catch (JWTException $th) {
 
-            return $this->sendError(__('Token invalid'), Response::HTTP_INTERNAL_SERVER_ERROR);
+            return $this->sendError(__('Token invalid'), Response::HTTP_UNAUTHORIZED);
         }
     }
 

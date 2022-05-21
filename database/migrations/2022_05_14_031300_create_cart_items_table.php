@@ -17,7 +17,7 @@ class CreateCartItemsTable extends Migration
             $table->increments('id');
             $table->unsignedInteger('product_id');
             $table->unsignedInteger('cart_id');
-            $table->decimal('price')->default(0)->comment('価格');
+            $table->bigInteger('price')->default(0)->comment('価格');
             $table->integer('quantity')->default(0)->comment('量');
             $table->foreign('product_id')->references('id')->on('products');
             $table->foreign('cart_id')->references('id')->on('carts');

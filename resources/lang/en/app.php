@@ -14,5 +14,9 @@ return [
     'user' => 'user',
     'product' => 'product',
     'category' => 'category',
+    'sold_out' => 'Sold out',
+    'add_cart_success' => 'Add cart successfully',
+    'update_cart_success' => 'Update cart successfully',
+    'delete_cart_success' => 'Delete cart successfully',
 
 ];

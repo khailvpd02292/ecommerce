@@ -35,7 +35,7 @@ class ProductController extends BaseController
 
         try {
 
-            $product = Product::with('category')->where('id', $id)->get();
+            $product = Product::with('category')->where('id', $id)->first();
 
             if ($product) {
 
@@ -45,7 +45,7 @@ class ProductController extends BaseController
                 return $this->sendError(__('app.not_found', ['attribute' => __('app.product')]), Response::HTTP_NOT_FOUND);
             }
 
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
 
             logger($e->getMessage());
             return $this->sendError(__('app.system_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -65,7 +65,6 @@ class ProductController extends BaseController
                 'image' => 'nullable|mimes:jpg,jpeg,png|max:500',
                 'description' => 'nullable|max:500',
                 'price' => 'required|numeric|between:0,9999999999',
-                'stock' => 'nullable|integer',
             ]);
 
             if ($validator->fails()) {
@@ -88,7 +87,7 @@ class ProductController extends BaseController
 
             return $this->sendSuccessResponse(null, __('app.action_success', ['action' => __('app.create'), 'attribute' => __('app.product')]));
 
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
 
             DB::rollBack();
             if ($path) {
@@ -110,7 +109,6 @@ class ProductController extends BaseController
                 'image' => 'nullable|mimes:jpg,jpeg,png|max:500',
                 'description' => 'nullable|max:500',
                 'price' => 'required|numeric|between:0,9999999999',
-                'stock' => 'nullable|integer',
             ]);
 
             if ($validator->fails()) {
@@ -146,7 +144,7 @@ class ProductController extends BaseController
 
             return $this->sendSuccessResponse(null, __('app.action_success', ['action' => __('app.update'), 'attribute' => __('app.product')]));
 
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
 
             logger($e->getMessage());
             return $this->sendError(__('app.system_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -172,7 +170,7 @@ class ProductController extends BaseController
                 return $this->sendError(__('app.not_found', ['attribute', __('app.product')]), Response::HTTP_NOT_FOUND);
             }
 
-        } catch (\Exception$e) {
+        } catch (\Exception $e) {
 
             logger($e->getMessage());
             return $this->sendSuccessResponse(null, __('app.action_failed', ['action' => __('app.delete'), 'attribute' => __('app.product')]));

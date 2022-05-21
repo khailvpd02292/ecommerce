@@ -21,4 +21,12 @@ class CartItem extends Model
         'price',
         'quantity',
     ];
+
+    public function getProduct() {
+        return $this->select('*')->join('products', 'cart_items.product_id', '=', 'products.id')->first();
+    }
+
+    public function getCart() {
+        return $this->select('carts.*')->join('carts', 'cart_items.cart_id', '=', 'carts.id')->first();
+    }
 }

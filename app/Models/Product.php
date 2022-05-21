@@ -21,7 +21,7 @@ class Product extends Model
         'image',
         'description',
         'price',
-        'stock',
+        'is_stock',
         'product_status_id', // 0: draft, 1: public
         'category_id',
     ];
