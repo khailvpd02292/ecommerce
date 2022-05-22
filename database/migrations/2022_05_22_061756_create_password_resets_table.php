@@ -15,7 +15,7 @@ class CreatePasswordResetsTable extends Migration
     {
         Schema::create('password_resets', function (Blueprint $table) {
             $table->increments('id')->unsigned();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedInteger('user_id')->nullable();
             $table->longText('token');
             $table->timestamp('expiration')->nullable();
             $table->timestamps();

@@ -18,7 +18,7 @@ class LoginController extends BaseController
             $credentials = $request->only('email', 'password');
 
             $validator = Validator::make($credentials, [
-                'email' => 'required|max:50|email|unique:users',
+                'email' => 'required|max:50|email',
                 'password'=> 'required|min:8|max:20',
             ]);
      

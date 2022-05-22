@@ -29,4 +29,21 @@ class Product extends Model
     public function category() {
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
+
+    public function getAll($request) {
+
+        $result = Product::with('category');
+
+        if ($request->keyword) {
+            $request->where('name', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('description', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('price', 'like', '%'.$request->keyword.'%');
+        }
+
+        // sort = 1 or null (created_at) desc
+        // sort = 2 (created_at) asc
+        // sort = 3 (price) desc
+        // sort = 4 (price) asc
+        // if($request->sort)
+    }
 }
