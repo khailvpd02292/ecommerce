@@ -234,7 +234,7 @@ class UserController extends BaseController
 
             //get User by email and create token
             $tokenArr[0] = $info->email;
-            $email_verify_token_expiration = Carbon::now()->addDays(Constant::TIME_EXPIRATION_TOKEN);
+            $email_verify_token_expiration = Carbon::now()->addDays(1);
             $tokenArr[1] = $email_verify_token_expiration;
 
             $token = Crypt::encrypt($tokenArr);
