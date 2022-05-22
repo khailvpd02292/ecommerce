@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginControlle;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as UController;
+use App\Http\Controllers\User\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,9 @@ Route::group(['prefix' => 'user'], function () {
 
     Route::post('/login', [UserLoginController::class, 'login']);
     Route::post('/logout', [UserLoginController::class, 'logout']);
+    Route::post('/signup', [UserController::class, 'sendMailRegister']);
+    Route::post('/signup/check', [UserController::class, 'create']);
+    Route::post('/signup/input', [UserController::class, 'store']);
 
     Route::group(['middleware' => ['assign.guard:users']], function () {
 
