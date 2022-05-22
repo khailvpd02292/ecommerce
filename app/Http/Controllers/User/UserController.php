@@ -137,7 +137,7 @@ class UserController extends BaseController
                 'name' => 'required',
                 'phone' => ['required', 'string', 'regex:/(0)[0-9]{9}/'],
                 'address' => 'required',
-                'password' => 'required|string|confirmed|min:8|max:20|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
+                'password' => 'required|string|min:8|max:20|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
                 'avatar' => 'nullable|mimes:jpg,jpeg,png|max:500',
             ]);
 
@@ -217,7 +217,7 @@ class UserController extends BaseController
             $credentials = $request->only('email');
 
             $validator = Validator::make($credentials, [
-                'email' => 'required|max:50|email|unique:users',
+                'email' => 'required|max:50|email',
             ]);
 
             if ($validator->fails()) {

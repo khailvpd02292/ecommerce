@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginControlle;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as UController;
+use App\Http\Controllers\User\ProductController as PController;
 use App\Http\Controllers\User\UserController;
 
 /*
@@ -89,4 +90,10 @@ Route::group(['prefix' => 'user'], function () {
 
 });
 
+Route::group(['prefix' => 'product'], function () {
+
+    Route::get('/list', [PController::class, 'index']);
+});
+
+// Route::get('/category/list', [PController::class, 'getListCategory']);
 

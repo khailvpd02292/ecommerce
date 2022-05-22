@@ -20,12 +20,16 @@ class ProductController extends BaseController
     }
 
 
-    public function index()
+    public function index(Request $request)
     {
 
-        $products = Product::with('category')->get();
+        $products = $this->product->getAll($request);
 
         return $this->sendSuccessResponse($products);
 
+    }
+
+    public function getListCategory() {
+        
     }
 }
