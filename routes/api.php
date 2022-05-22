@@ -68,8 +68,11 @@ Route::group(['prefix' => 'user'], function () {
     Route::post('/login', [UserLoginController::class, 'login']);
     Route::post('/logout', [UserLoginController::class, 'logout']);
     Route::post('/signup', [UserController::class, 'sendMailRegister']);
-    Route::post('/signup/check', [UserController::class, 'create']);
-    Route::post('/signup/input', [UserController::class, 'store']);
+    Route::get('/signup/check/{token}', [UserController::class, 'create']);
+    Route::post('/signup/input/{token}', [UserController::class, 'store']);
+    Route::post('/reset/input', [UserController::class, 'sendMailResetPassword']);
+    Route::get('/reset/check/{token}', [UserController::class, 'viewReset']);
+    Route::post('/reset/token/{token}', [UserController::class, 'reset']);
 
     Route::group(['middleware' => ['assign.guard:users']], function () {
 
