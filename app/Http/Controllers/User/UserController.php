@@ -369,4 +369,12 @@ class UserController extends BaseController
         }
     }
 
+    public function show() {
+
+        $user = $this->user->getInfo(auth('users')->user()->id);
+
+        return $this->sendSuccessResponse($user, null);
+
+    }
+
 }

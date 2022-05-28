@@ -87,6 +87,8 @@ Route::group(['prefix' => 'user'], function () {
     Route::group(['middleware' => ['assign.guard:users']], function () {
 
         Route::get('/me', [UserLoginController::class, 'me']);
+
+        Route::get('/profile', [UserController::class, 'show']);
         Route::get('/cart', [ShoppingController::class, 'index']);
         Route::get('/category/list', [CategoryController::class, 'index']);
         Route::post('/transaction', [OrderController::class, 'store']);
