@@ -97,17 +97,18 @@ class ShoppingController extends BaseController
                         'price' => $product->price,
                         'quantity' => ($request->quantity) + ($cartItem->quantity),
                     ]);
-
-                    $carts = $this->cartItem->where('cart_id', $existCart->id)->get();
-
-                    $price = 0;
-                    foreach ($carts as $value) {
-                        $price += $value->quantity * $value->price;
-                    }
-                    $existCart->update([
-                        'total_price' => $price,
-                    ]);
+                    
                 }
+
+                $carts = $this->cartItem->where('cart_id', $existCart->id)->get();
+
+                $price = 0;
+                foreach ($carts as $value) {
+                    $price += $value->quantity * $value->price;
+                }
+                $existCart->update([
+                    'total_price' => $price,
+                ]);
 
             }
     

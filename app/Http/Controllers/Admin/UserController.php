@@ -26,7 +26,7 @@ class UserController extends BaseController
 
     public function show($id) {
 
-        $user = $this->user->where('id', $id)->first();
+        $user = $this->user->getInfo($id);
 
         return $this->sendSuccessResponse($user, null);
 

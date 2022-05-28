@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Cart;
+use App\Models\Product;
 
 class CartItem extends Model
 {
@@ -21,6 +23,16 @@ class CartItem extends Model
         'price',
         'quantity',
     ];
+
+    public function cart() {
+        
+        return $this->hasOne(Cart::class,  'cart_id', 'id');
+    }
+
+    public function product() {
+        
+        return $this->hasOne(Product::class, 'id', 'product_id');
+    }
 
     public function getProduct() {
         return $this->select('*')->join('products', 'cart_items.product_id', '=', 'products.id')->first();

@@ -10,6 +10,8 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController as UController;
 use App\Http\Controllers\User\ProductController as PController;
 use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\User\OrderController;
+use App\Http\Controllers\Admin\OrderController as AOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +60,13 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/detail/{id}', [UController::class, 'show']);
         
         });
+
+        Route::group(['prefix' => 'order'], function () {
+
+            Route::get('/list', [AOrderController::class, 'index']);
+            Route::post('/update-order/{id}', [AOrderController::class, 'update']);
+        
+        });
     });
 
 });
@@ -79,6 +88,8 @@ Route::group(['prefix' => 'user'], function () {
 
         Route::get('/me', [UserLoginController::class, 'me']);
         Route::get('/cart', [ShoppingController::class, 'index']);
+        Route::get('/category/list', [CategoryController::class, 'index']);
+        Route::post('/transaction', [OrderController::class, 'store']);
         Route::group(['prefix' => 'cart'], function () {
 
             Route::post('/add', [ShoppingController::class, 'create']);
@@ -95,5 +106,4 @@ Route::group(['prefix' => 'product'], function () {
     Route::get('/list', [PController::class, 'index']);
 });
 
-// Route::get('/category/list', [PController::class, 'getListCategory']);
 
