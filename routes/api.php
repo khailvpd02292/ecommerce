@@ -90,18 +90,19 @@ Route::group(['prefix' => 'user'], function () {
 
         Route::get('/profile', [UserController::class, 'show']);
         Route::get('/cart', [ShoppingController::class, 'index']);
-        Route::get('/category/list', [CategoryController::class, 'index']);
         Route::post('/transaction', [OrderController::class, 'store']);
         Route::group(['prefix' => 'cart'], function () {
-
+            
             Route::post('/add', [ShoppingController::class, 'create']);
             Route::post('/update', [ShoppingController::class, 'update']);
             Route::delete('/delete/{id}', [ShoppingController::class, 'destroy']);
         });
-
+        
     });
-
+    
 });
+
+Route::get('/category/list', [CategoryController::class, 'index']);
 
 Route::group(['prefix' => 'product'], function () {
 
