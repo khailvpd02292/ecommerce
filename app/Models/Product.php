@@ -36,16 +36,18 @@ class Product extends Model
         $result = Product::with('category');
 
         if (isset($request->keyword)) {
-            $result->where('name', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('description', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('price', 'like', '%'.$request->keyword.'%');
+            $keyword = $request->keyword;
+            $result->where(function ($query) use ($keyword) {
+                $query->where('name', 'like', '%'.$keyword.'%')
+                        ->orWhere('description', 'like', '%'.$keyword.'%')
+                        ->orWhere('price', 'like', '%'.$keyword.'%');
+            });
+            
         }
 
         if (isset($request->category_id)) {
             $category = explode(",", $request->category_id);
-            $result->whereHas('category', function (Builder $query) use($category) {
-                $query->whereIn('id', $category);
-               });
+            $result->whereIn('category_id', $category);
         }
 
         // sort = 1 or null (created_at) desc
