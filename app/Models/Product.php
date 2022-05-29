@@ -50,6 +50,9 @@ class Product extends Model
             $result->whereIn('category_id', $category);
         }
 
+        // Get product public
+        $result->where('product_status_id', 1);
+
         // sort = 1 or null (created_at) desc
         // sort = 2 (created_at) asc
         // sort = 3 (price) desc

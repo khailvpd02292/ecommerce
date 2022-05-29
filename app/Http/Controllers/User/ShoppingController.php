@@ -28,6 +28,20 @@ class ShoppingController extends BaseController
 
         $user_id = auth('users')->user()->id;
         $carts = $this->cart->getCart($user_id);
+        $isDelete = false;
+        if ($carts) {
+            foreach ($carts->cartItem as $item) {
+
+                if ($item->product->product_status_id == 0) {
+                    $this->destroy($item->id);
+                    $isDelete = true;
+                }
+            }
+        }
+        
+        if($isDelete) {
+            $carts = $this->cart->getCart($user_id);
+        }
 
         return $this->sendSuccessResponse($carts, null);
     }
