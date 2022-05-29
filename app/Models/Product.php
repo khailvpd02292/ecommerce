@@ -42,7 +42,7 @@ class Product extends Model
         }
 
         if (isset($request->category_id)) {
-            $category = $request->category_id;
+            $category = explode(",", $request->category_id);
             $result->whereHas('category', function (Builder $query) use($category) {
                 $query->whereIn('id', $category);
                });
