@@ -316,7 +316,7 @@ class UserController extends BaseController
         
     }
 
-    public function reset($token, ResetPasswordRequest $request) {
+    public function reset($token, Request $request) {
 
         try {
 
