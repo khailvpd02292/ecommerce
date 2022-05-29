@@ -25,6 +25,13 @@ class ProductController extends BaseController
 
         $products = $this->product->getAll($request);
 
+        foreach ($products as $key => $item) {
+            
+            if($item->image) {
+                $item['image'] = config('app.url').'/storage/'.$item->image;
+            }
+        }
+
         return $this->sendSuccessResponse($products);
 
     }
