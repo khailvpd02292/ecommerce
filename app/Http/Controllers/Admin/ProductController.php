@@ -81,9 +81,24 @@ class ProductController extends BaseController
                 ]);
             }
 
+            $product = $this->product->create($requestProduct);
 
-            $this->product->create($requestProduct);
-            DB::commit();
+            $stripe = new \Stripe\StripeClient(config('app.stripe'));
+            $products = $stripe->products->create(
+                [
+                  "id" => $product->id,
+                  'name' => $request->name,
+                  'description' => $request->description,
+                  'default_price_data' => [
+                    'unit_amount' => $request->price,
+                    'currency' => 'usd',
+                    // 'recurring' => ['interval' => 'month'],
+                  ],
+                  'expand' => ['default_price'],
+                ]
+              );
+
+              DB::commit();
 
             return $this->sendSuccessResponse(null, __('app.action_success', ['action' => __('app.create'), 'attribute' => __('app.product')]));
 

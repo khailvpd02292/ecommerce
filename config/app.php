@@ -56,6 +56,8 @@ return [
 
     'url_fe' => env('URL_FE', 'http://localhost'),
 
+    'stripe' => env('STRIPE', 'sk_test_51L6TkqLpaU2gsOeVscr5A9k9ikLfoShhz7Ye6oSy7QL850hHBIBRa38wPVkvxqDCLgdS3BQEM0kiRtMVMxoRJ2yy00EWjszMtO'),
+
     'asset_url' => env('ASSET_URL', null),
 
     /*
