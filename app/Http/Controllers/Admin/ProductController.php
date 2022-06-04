@@ -68,7 +68,9 @@ class ProductController extends BaseController
     {
 
         try {
+            $stripe = new \Stripe\StripeClient(config('app.stripe'));
             $path = NULL;
+
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
@@ -94,7 +96,7 @@ class ProductController extends BaseController
 
             $product = $this->product->create($requestProduct);
 
-            $stripe = new \Stripe\StripeClient(config('app.stripe'));
+           
             $requestProduct = [
                 "id" => 'prod_'.$product->id,
                 'name' => $request->name,
@@ -111,7 +113,11 @@ class ProductController extends BaseController
                     ]
                 ]);
             }
-            $stripe->products->create($requestProduct);
+            $response = $stripe->products->create($requestProduct);
+            
+            $product->update([
+                'api_id' => $response->default_price
+            ]);
 
             DB::commit();
 
@@ -120,6 +126,17 @@ class ProductController extends BaseController
         } catch (\Exception $e) {
 
             DB::rollBack();
+
+            if(isset($product)) {
+
+                $stripe->products->update(
+                    'prod_'.$product->id,
+                    [
+                        "active" => false,
+                    ]
+                  );
+            }
+
             if ($path) {
                 if (file_exists(public_path('storage/'.$path))) {
                     @unlink(public_path('storage/'.$path));

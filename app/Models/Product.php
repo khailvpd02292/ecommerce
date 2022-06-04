@@ -23,6 +23,7 @@ class Product extends Model
         'description',
         'price',
         'is_stock',
+        'api_id',
         'product_status_id', // 0: draft, 1: public
         'category_id',
     ];

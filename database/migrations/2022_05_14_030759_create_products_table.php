@@ -18,6 +18,7 @@ class CreateProductsTable extends Migration
             $table->string('name');
             $table->text('image')->nullable();
             $table->text('description')->nullable();
+            $table->string('api_id')->nullable();
             $table->bigInteger('price')->nullable();
             $table->boolean('is_stock')->default(1);
             $table->tinyInteger('product_status_id')->default(1); // 1 draft, 2 public
