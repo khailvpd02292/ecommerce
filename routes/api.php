@@ -64,6 +64,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'order'], function () {
 
             Route::get('/list', [AOrderController::class, 'index']);
+            Route::get('/detail/{id}', [AOrderController::class, 'show']);
             Route::post('/update-order/{id}', [AOrderController::class, 'update']);
         
         });
@@ -102,11 +103,9 @@ Route::group(['prefix' => 'user'], function () {
     
 });
 
+
+// All
 Route::get('/category/list', [CategoryController::class, 'index']);
-
-Route::group(['prefix' => 'product'], function () {
-
-    Route::get('/list', [PController::class, 'index']);
-});
+Route::get('/product/list', [PController::class, 'index']);
 
 

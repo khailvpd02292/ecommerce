@@ -6,6 +6,7 @@ use App\Http\Controllers\BaseController;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class OrderController extends BaseController
 {
@@ -24,6 +25,17 @@ class OrderController extends BaseController
 
         return $this->sendSuccessResponse($orders, null);
 
+    }
+
+    public function show($id) {
+        $order = $this->order->detail($id);
+
+        if (empty($order)) {
+
+            return $this->sendError(__('app.not_found', ['attribute' => __('app.order')]), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $this->sendSuccessResponse($order, null);
     }
 
 

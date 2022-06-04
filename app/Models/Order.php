@@ -27,4 +27,14 @@ class Order extends Model
         'payment_method',
         'payment_date',
     ];
+
+    public function orderItems() {
+        return $this->hasMany(OrderItem::class);
+    }
+
+    public function detail($id) {
+        $result = Order::with(['orderItems', 'orderItems.product'])->where('id', $id)->first();
+
+        return $result;
+    }
 }
