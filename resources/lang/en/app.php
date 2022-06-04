@@ -18,6 +18,7 @@ return [
     'sold_out' => 'Sold out',
     'add_cart_success' => 'Add cart successfully',
     'update_cart_success' => 'Update cart successfully',
+    'comment_product_success' => 'Comment product successfully',
     'delete_cart_success' => 'Delete cart successfully',
     'token_invalid' => 'Token invalid',
     'transaction_success' => 'Transaction successfully',

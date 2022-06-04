@@ -31,13 +31,9 @@ class Product extends Model
         return $this->hasOne(Category::class, 'id', 'category_id');
     }
 
-    public function commentProducts() {
-        return $this->hasMany(CommentProduct::class);
-    }
-
     public function getAll($request) {
 
-        $result = Product::with(['category', 'commentProducts', 'commentProducts.user']);
+        $result = Product::with('category');
 
         if (isset($request->keyword)) {
             $keyword = $request->keyword;

@@ -92,6 +92,7 @@ Route::group(['prefix' => 'user'], function () {
         Route::get('/profile', [UserController::class, 'show']);
         Route::get('/cart', [ShoppingController::class, 'index']);
         Route::post('/transaction', [OrderController::class, 'store']);
+        Route::post('/product/comment/{id}', [PController::class, 'comment']);
         Route::group(['prefix' => 'cart'], function () {
             
             Route::post('/add', [ShoppingController::class, 'create']);
