@@ -26,6 +26,13 @@ class ProductController extends BaseController
 
         $products = $this->product->getAll($request->all());
 
+        foreach ($products as $key => $item) {
+            
+            if($item->image) {
+                $item['image'] = config('app.url').'/storage/'.$item->image;
+            }
+        }
+
         return $this->sendSuccessResponse($products);
 
     }
@@ -38,6 +45,10 @@ class ProductController extends BaseController
             $product = Product::with('category')->where('id', $id)->first();
 
             if ($product) {
+
+                if ($product->image) {
+                    $product['image'] = config('app.url').'/storage/'.$product->image;
+                }
 
                 return $this->sendSuccessResponse($product);
             } else {
@@ -84,21 +95,25 @@ class ProductController extends BaseController
             $product = $this->product->create($requestProduct);
 
             $stripe = new \Stripe\StripeClient(config('app.stripe'));
-            $products = $stripe->products->create(
-                [
-                  "id" => $product->id,
-                  'name' => $request->name,
-                  'description' => $request->description,
-                  'default_price_data' => [
-                    'unit_amount' => $request->price,
-                    'currency' => 'usd',
-                    // 'recurring' => ['interval' => 'month'],
-                  ],
-                  'expand' => ['default_price'],
-                ]
-              );
+            $requestProduct = [
+                "id" => 'prod_'.$product->id,
+                'name' => $request->name,
+                'description' => $request->description,
+                'default_price_data' => [
+                  'unit_amount' => $request->price,
+                  'currency' => 'usd',
+                ],
+            ];
+            if ($path) {
+                $requestProduct = array_merge($requestProduct, [
+                    'images' => [
+                        config('app.url').'/storage/'.$path
+                    ]
+                ]);
+            }
+            $stripe->products->create($requestProduct);
 
-              DB::commit();
+            DB::commit();
 
             return $this->sendSuccessResponse(null, __('app.action_success', ['action' => __('app.create'), 'attribute' => __('app.product')]));
 
