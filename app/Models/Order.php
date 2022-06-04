@@ -24,6 +24,7 @@ class Order extends Model
         'address',
         'pre_order_id',
         'total',
+        'status',
         'payment_method',
         'payment_date',
     ];
