@@ -70,7 +70,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function getInfo($id) {
 
-        $user = User::with('order')->where('id', $id)->first();
+        $user = User::with(['order', 'order.orderItems', 'order.orderItems.product'])->where('id', $id)->first();
 
         return $user;
     }
