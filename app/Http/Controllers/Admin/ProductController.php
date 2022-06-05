@@ -129,12 +129,21 @@ class ProductController extends BaseController
 
             if(isset($product)) {
 
-                $stripe->products->update(
-                    'prod_'.$product->id,
-                    [
-                        "active" => false,
-                    ]
-                  );
+                try {
+
+                    $stripe->products->update(
+                        'prod_'.$product->id,
+                        [
+                            "active" => false,
+                        ]
+                      );
+                      
+                  } catch (\Exception $ex) {
+    
+                    logger($ex->getMessage());
+                  }
+
+               
             }
 
             if ($path) {
@@ -151,10 +160,12 @@ class ProductController extends BaseController
     {
 
         try {
+            DB::beginTransaction();
             $validator = Validator::make($request->all(), [
                 'name' => 'required|max:200',
                 'image' => 'nullable|mimes:jpg,jpeg,png|max:500',
                 'description' => 'nullable|max:500',
+                'product_status_id' => 'nullable|integer|min:0|max:1',
                 'price' => 'required|numeric|between:0,9999999999',
             ]);
 
@@ -162,7 +173,7 @@ class ProductController extends BaseController
                 return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
-            $product = Product::find($id);
+            $product = Product::where('id', $id)->where('product_status_id', 1)->first();
             if (empty($product)) {
 
                 return $this->sendError(__('app.not_found', ['attribute' => __('app.product')]), Response::HTTP_NOT_FOUND);
@@ -173,26 +184,81 @@ class ProductController extends BaseController
             } else {
                 $requestProduct = $request->all();
             }
-           
+
+            if(empty($request->product_status_id)) {
+
+                $status = $request->product_status_id == 1 ? true : false;
+            } else {
+
+                $status = $product->product_status_id == 1 ? true : false;
+            }
+
+            $requestStripe = [
+                'name' => $request->name,
+                'description' => $request->description,
+            ];
+
             if ($request->hasFile('image') && $request->is_delete == 1) {
                 $path = $this->uploadFile($request->image);
 
                 $requestProduct = array_merge($requestProduct, [
                     'image' => $path
                 ]);
+
+                $requestStripe = array_merge($requestStripe, [
+                    'images' => [
+                        config('app.url').'/storage/'.$path
+                    ]
+                ]);
+
             } else if (empty($request->hasFile('image')) && $request->is_delete == 1) {
 
                 $requestProduct = array_merge($requestProduct, [
                     'image' => ''
                 ]);
+
+                $requestStripe = array_merge($requestStripe, [
+                    'images' => []
+                ]);
             }
 
-            $product->update($requestProduct);
+            $stripe = new \Stripe\StripeClient(config('app.stripe'));
+            try {
 
+                $response = $stripe->prices->create([
+                    'unit_amount' => 2000,
+                    'currency' => 'usd',
+                    'product' => 'prod_'.$product->id,
+                  ]);
+                if ($response->id) {
+
+                $requestStripe = array_merge($requestStripe, [
+                    'default_price' => $response->id
+                ]);
+                    
+                $stripe->products->update('prod_'.$product->id, $requestStripe);
+
+                $requestProduct = array_merge($requestProduct, [
+                    'api_id' => $response->id
+                ]);
+                
+                $product->update($requestProduct);
+                    
+                }
+
+            } catch (\Exception $ex) {
+
+                DB::rollback();
+                logger($e->getMessage());
+                return $this->sendError(__('app.system_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            DB::commit();
             return $this->sendSuccessResponse(null, __('app.action_success', ['action' => __('app.update'), 'attribute' => __('app.product')]));
 
         } catch (\Exception $e) {
 
+            DB::rollback();
             logger($e->getMessage());
             return $this->sendError(__('app.system_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -203,22 +269,40 @@ class ProductController extends BaseController
 
         try {
 
-            $product = Product::find($id);
+            DB::beginTransaction();
+            $product = Product::where('id', $id)->where('product_status_id', 1)->first();
 
             if ($product) {
 
                 $product->update([
                     'product_status_id' => 0
                 ]);
+
+              try {
+
+                $stripe = new \Stripe\StripeClient(config('app.stripe'));
+                $stripe->products->update(
+                    'prod_'.$product->id,
+                    [
+                        "active" => false,
+                    ]
+                  );
+              } catch (\Exception $ex) {
+
+                logger($ex->getMessage());
+              }
+              DB::commit();
+
                 return $this->sendSuccessResponse(null, __('app.action_success', ['action' => __('app.delete'), 'attribute' => __('app.product')]));
 
             } else {
 
-                return $this->sendError(__('app.not_found', ['attribute', __('app.product')]), Response::HTTP_NOT_FOUND);
+                return $this->sendError(__('app.not_found', ['attribute' => __('app.product')]), Response::HTTP_NOT_FOUND);
             }
 
         } catch (\Exception $e) {
 
+            DB::rollback();
             logger($e->getMessage());
             return $this->sendSuccessResponse(null, __('app.action_failed', ['action' => __('app.delete'), 'attribute' => __('app.product')]));
         }

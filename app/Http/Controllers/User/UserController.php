@@ -138,7 +138,7 @@ class UserController extends BaseController
                 'phone' => ['required', 'string', 'regex:/(0)[0-9]{9}/'],
                 'address' => 'required',
                 'password' => 'required|string|min:8|max:20|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
-                'avatar' => 'nullable|mimes:jpg,jpeg,png|max:500',
+                // 'avatar' => 'nullable|mimes:jpg,jpeg,png|max:500',
             ]);
 
             if ($validator->fails()) {
@@ -157,13 +157,13 @@ class UserController extends BaseController
 
             $requestUser = $request->except(['avatar']);
 
-            if ($request->hasFile('avatar')) {
-                $path = $this->uploadFile($request->avatar);
+            // if ($request->hasFile('avatar')) {
+            //     $path = $this->uploadFile($request->avatar);
 
-                $requestUser = array_merge($requestUser, [
-                    'avatar' => $path,
-                ]);
-            }
+            //     $requestUser = array_merge($requestUser, [
+            //         'avatar' => $path,
+            //     ]);
+            // }
 
             if ($userExists) {
 
@@ -375,6 +375,83 @@ class UserController extends BaseController
 
         return $this->sendSuccessResponse($user, null);
 
+    }
+
+    
+    public function update(Request $request) {
+
+        try {
+            // $path = NULL;
+            DB::beginTransaction();
+
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|max:50|email|unique:users',
+                'name' => 'required',
+                'phone' => ['required', 'string', 'regex:/(0)[0-9]{9}/'],
+                'address' => 'required',
+                'password' => 'required|string|min:8|max:20|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
+                // 'avatar' => 'nullable|mimes:jpg,jpeg,png|max:500',
+            ]);
+
+            if ($validator->fails()) {
+                return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            // $requestProduct = $request->all();
+
+            // if ($request->hasFile('avatar')) {
+            //     $path = $this->uploadFile($request->image);
+
+            //     $requestProduct = array_merge($requestProduct, [
+            //         'avatar' => $path
+            //     ]);
+            // }
+            $user = $this->user->where('id', auth('users')->user()->id)->first();
+            
+            if (empty($user)) {
+
+                return $this->sendError(__('app.not_found', ['attribute' => __('app.user')]), Response::HTTP_NOT_FOUND);
+            }
+
+            $requestUser = $request->except(['avatar']);
+
+            $requestUser = array_merge($requestUser, [
+                'password' => bcrypt($request->password),
+            ]);
+
+            $user->update($requestUser);
+            DB::commit();
+
+            return $this->sendSuccessResponse(null, __('app.action_success', ['action' => __('app.create'), 'attribute' => __('app.product')]));
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            // if ($path) {
+            //     if (file_exists(public_path('storage/'.$path))) {
+            //         @unlink(public_path('storage/'.$path));
+            //     }
+            // }
+            logger($e->getMessage());
+            return $this->sendError(__('app.system_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    public function uploadFile($file)
+    {
+        $name = $file->getClientOriginalName();
+
+        $fileName = time() . '_' . $name;
+
+        $pathStorage = 'app/public/users/';
+
+        // UPLOAD IMAGE
+        $file->move(storage_path($pathStorage), $fileName);
+
+        $path = 'users/' . $fileName;
+
+        return $path;
     }
 
 }
