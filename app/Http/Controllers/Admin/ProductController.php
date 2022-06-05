@@ -102,7 +102,7 @@ class ProductController extends BaseController
                 'name' => $request->name,
                 'description' => $request->description,
                 'default_price_data' => [
-                  'unit_amount' => $request->price,
+                  'unit_amount' => $request->price.'00',
                   'currency' => 'usd',
                 ],
             ];
@@ -226,7 +226,7 @@ class ProductController extends BaseController
             try {
 
                 $response = $stripe->prices->create([
-                    'unit_amount' => 2000,
+                    'unit_amount' => $request->price.'00',
                     'currency' => 'usd',
                     'product' => 'prod_'.$product->id,
                   ]);
