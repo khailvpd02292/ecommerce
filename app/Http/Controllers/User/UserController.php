@@ -389,7 +389,6 @@ class UserController extends BaseController
                 'name' => 'required',
                 'phone' => ['required', 'string', 'regex:/(0)[0-9]{9}/'],
                 'address' => 'required',
-                'password' => 'required|string|min:8|max:20|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
                 // 'avatar' => 'nullable|mimes:jpg,jpeg,png|max:500',
             ]);
 
@@ -425,11 +424,23 @@ class UserController extends BaseController
                 }
             }
 
-            $requestUser = $request->except(['avatar']);
+            if (!empty($request->password) && ($request->password != $user->password)) {
 
-            $requestUser = array_merge($requestUser, [
-                'password' => bcrypt($request->password),
-            ]);
+                $validator = Validator::make($request->all(), [
+                    'password' => 'required|string|min:8|max:20|regex:/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/',
+                ]);
+    
+                if ($validator->fails()) {
+                    return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
+                }
+
+                $requestUser = array_merge($requestUser, [
+                    'password' => bcrypt($request->password),
+                ]);
+
+            }
+
+            $requestUser = $request->except(['avatar']);
 
             $user->update($requestUser);
             DB::commit();
