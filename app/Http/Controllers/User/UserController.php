@@ -385,26 +385,14 @@ class UserController extends BaseController
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                // 'email' => 'required|max:50|email|unique:users',
                 'name' => 'required',
                 'phone' => ['required', 'string', 'regex:/(0)[0-9]{9}/'],
                 'address' => 'required',
-                // 'avatar' => 'nullable|mimes:jpg,jpeg,png|max:500',
             ]);
 
             if ($validator->fails()) {
                 return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
-
-            // $requestProduct = $request->all();
-
-            // if ($request->hasFile('avatar')) {
-            //     $path = $this->uploadFile($request->image);
-
-            //     $requestProduct = array_merge($requestProduct, [
-            //         'avatar' => $path
-            //     ]);
-            // }
             $user = $this->user->where('id', auth('users')->user()->id)->first();
 
             
@@ -415,9 +403,9 @@ class UserController extends BaseController
 
             if($user->email != $request->email) {
 
-                $validator = Validator::make($request->all(), [
+                $validator = Validator::make([
                     'email' => 'required|max:50|email|unique:users',
-                ]);
+                ], $request->all());
     
                 if ($validator->fails()) {
                     return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
