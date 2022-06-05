@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Order;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
-use App\Models\Order;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -42,7 +42,7 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
     ];
-    
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -68,9 +68,35 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(Order::class);
     }
 
-    public function getInfo($id) {
+    public function getInfo($id)
+    {
 
         $user = User::with(['order', 'order.orderItems', 'order.orderItems.product'])->where('id', $id)->first();
+
+        if (!empty($user)) {
+
+            $ids = [];
+
+            foreach ($user->order as $order) {
+
+                if ($order->orderItems) {
+                    
+                    foreach ($order->orderItems as $orderItem) {
+                        
+                        if ($orderItem->product->image) {
+
+                            if(!in_array($orderItem->product->id, $ids)) {
+
+                                array_push($ids, $orderItem->product->id);
+
+                                $orderItem->product->image = config('app.url').'/storage/'.$orderItem->product->image;
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
 
         return $user;
     }

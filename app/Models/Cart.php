@@ -35,6 +35,14 @@ class Cart extends Model
             ->orderBy('updated_at', 'desc')
             ->first();
 
+        foreach ($result->cartItem as $item) {
+            
+            if ($item->product->image) {
+
+                $item->product->image = config('app.url').'/storage/'.$item->product->image;
+            }
+        }
+
         return $result;
     }
 }
