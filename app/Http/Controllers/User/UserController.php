@@ -385,7 +385,7 @@ class UserController extends BaseController
             DB::beginTransaction();
 
             $validator = Validator::make($request->all(), [
-                'email' => 'required|max:50|email|unique:users',
+                // 'email' => 'required|max:50|email|unique:users',
                 'name' => 'required',
                 'phone' => ['required', 'string', 'regex:/(0)[0-9]{9}/'],
                 'address' => 'required',
@@ -407,10 +407,22 @@ class UserController extends BaseController
             //     ]);
             // }
             $user = $this->user->where('id', auth('users')->user()->id)->first();
+
             
             if (empty($user)) {
 
                 return $this->sendError(__('app.not_found', ['attribute' => __('app.user')]), Response::HTTP_NOT_FOUND);
+            }
+
+            if($user->email != $request->email) {
+
+                $validator = Validator::make($request->all(), [
+                    'email' => 'required|max:50|email|unique:users',
+                ]);
+    
+                if ($validator->fails()) {
+                    return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
+                }
             }
 
             $requestUser = $request->except(['avatar']);
