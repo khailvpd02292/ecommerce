@@ -16,17 +16,41 @@ class HomeController extends BaseController
             ->orderBy('month', 'asc')
             ->get();
 
+        if(count($totalOrder) <= 0) {
+            $totalMoney = [
+                [
+                    "year" => 0 
+                ]
+            ];
+        }
+
         $totalMoney = DB::table('orders')
             ->select(DB::raw('YEAR(payment_date) year, MONTH(payment_date) month'), DB::raw('SUM(total) as total'))
             ->groupby('year','month')
             ->orderBy('month', 'asc')
             ->get();
 
+        if(count($totalMoney) <= 0) {
+            $totalMoney = [
+                [
+                    "year" => 0 
+                ]
+            ];
+        }
+
         $totalProduct = DB::table('order_items')
             ->select(DB::raw('YEAR(created_at) year, MONTH(created_at) month'), DB::raw('SUM(quantity) as total'))
             ->groupby('year','month')
             ->orderBy('month', 'asc')
             ->get();
+
+        if(count($totalProduct) <= 0) {
+            $totalMoney = [
+                [
+                    "year" => 0 
+                ]
+            ];
+        }
 
 
         $listMonth = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -47,7 +71,7 @@ class HomeController extends BaseController
                 if(empty($month)) {
                     $month = $item;
                 }
-                if ($value->year == date('Y')) {
+                if (isset($value->year) && ($value->year == date('Y'))) {
 
                     if ($value->month == ($key + 1)) {
                         
@@ -86,7 +110,7 @@ class HomeController extends BaseController
                 if(empty($month)) {
                     $month = $item;
                 }
-                if ($value->year == date('Y')) {
+                if (isset($value->year) && ($value->year == date('Y'))) {
 
                     if ($value->month == ($key + 1)) {
                         
@@ -125,7 +149,7 @@ class HomeController extends BaseController
                 if(empty($month)) {
                     $month = $item;
                 }
-                if ($value->year == date('Y')) {
+                if (isset($value->year) && ($value->year == date('Y'))) {
 
                     if ($value->month == ($key + 1)) {
                         
