@@ -7,6 +7,7 @@ use App\Http\Controllers\User\ShoppingController;
 use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginControlle;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\UserController as UController;
 use App\Http\Controllers\User\ProductController as PController;
 use App\Http\Controllers\User\UserController;
@@ -33,6 +34,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => ['assign.guard:admins']], function () {
 
         Route::get('/me', [AdminLoginControlle::class, 'me']);
+        Route::get('/dashboard', [HomeController::class, 'index']);
 
         Route::group(['prefix' => 'category'], function () {
 
