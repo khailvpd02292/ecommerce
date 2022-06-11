@@ -328,7 +328,7 @@ class ShoppingController extends BaseController
 
             DB::commit();
 
-            return $this->sendSuccessResponse(null, __('app.transaction_success'));
+            return $this->sendSuccessResponse(null, null);
 
         } catch (\Exception$e) {
 
