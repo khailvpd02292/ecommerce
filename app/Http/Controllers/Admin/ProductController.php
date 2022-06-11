@@ -100,7 +100,7 @@ class ProductController extends BaseController
 
            
             $requestProduct = [
-                "id" => 'test_prod_'.$product->id,
+                "id" => 'prod_'.$product->id,
                 'name' => $request->name,
                 'description' => $request->description,
                 'default_price_data' => [
