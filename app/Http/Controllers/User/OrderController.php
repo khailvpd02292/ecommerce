@@ -17,17 +17,20 @@ class OrderController extends BaseController
     protected $cartItem;
     protected $order;
     protected $orderItem;
+    protected $product;
 
     public function __construct(
         Cart $cart,
         CartItem $cartItem,
         Order $order,
-        OrderItem $orderItem
+        OrderItem $orderItem,
+        Product $product
     ) {
         $this->cart = $cart;
         $this->cartItem = $cartItem;
         $this->order = $order;
         $this->orderItem = $orderItem;
+        $this->product = $product;
     }
 
     public function store(Request $request) {
@@ -59,6 +62,19 @@ class OrderController extends BaseController
                     'price' => $item->price,
                     'quantity' => $item->quantity,
                 ]);
+
+                $product = $this->product->where('id', $item->product_id)->first();
+
+                if ($product) {
+                    $stock = $product->quantity - $item->quantity;
+                    if ($stock <= 0) {
+                        $stock = 0;
+                    }
+                    $product->update([
+                        'quantity'  => $stock
+                    ]);
+                }
+
             }
 
             $cartItem = $this->cartItem->where('cart_id', $carts->id)->get();

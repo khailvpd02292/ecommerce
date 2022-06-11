@@ -105,7 +105,7 @@ class ProductController extends BaseController
                 'description' => $request->description,
                 'default_price_data' => [
                   'unit_amount' => $request->price.'00',
-                  'currency' => 'usd',
+                  'currency' => 'vnd',
                 ],
             ];
             if ($path) {
@@ -231,7 +231,7 @@ class ProductController extends BaseController
 
                 $response = $stripe->prices->create([
                     'unit_amount' => $request->price.'00',
-                    'currency' => 'usd',
+                    'currency' => 'vnd',
                     'product' => 'prod_'.$product->id,
                   ]);
                 if ($response->id) {

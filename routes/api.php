@@ -94,6 +94,8 @@ Route::group(['prefix' => 'user'], function () {
         Route::get('/profile', [UserController::class, 'show']);
         Route::post('/update', [UserController::class, 'update']);
 
+        Route::get('/check-stock', [ShoppingController::class, 'checkStock']);
+
         Route::get('/cart', [ShoppingController::class, 'index']);
         Route::post('/transaction', [OrderController::class, 'store']);
         Route::group(['prefix' => 'cart'], function () {
