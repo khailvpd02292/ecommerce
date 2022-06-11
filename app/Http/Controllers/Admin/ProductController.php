@@ -78,6 +78,7 @@ class ProductController extends BaseController
                 'image' => 'nullable|mimes:jpg,jpeg,png|max:500',
                 'description' => 'nullable|max:500',
                 'price' => 'required|numeric|between:0,9999999999',
+                'pre_tax_price' => 'required|numeric|between:0,9999999999',
                 'quantity' => 'nullable|numeric|between:0,9999999999',
             ]);
 
@@ -168,6 +169,7 @@ class ProductController extends BaseController
                 'description' => 'nullable|max:500',
                 'product_status_id' => 'nullable|integer|min:0|max:1',
                 'price' => 'required|numeric|between:0,9999999999',
+                'pre_tax_price' => 'required|numeric|between:0,9999999999',
                 'quantity' => 'nullable|numeric|between:0,9999999999',
             ]);
 
