@@ -22,7 +22,8 @@ class Product extends Model
         'image',
         'description',
         'price',
-        'is_stock',
+        'quantity',
+        'pre_tax_price',
         'product_status_id', // 0: draft, 1: public
         'category_id',
     ];

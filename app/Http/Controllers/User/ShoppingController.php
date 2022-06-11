@@ -69,7 +69,7 @@ class ShoppingController extends BaseController
     
                 logger('Not found product');
                 return $this->sendError(__('app.system_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
-            } else if($product->is_stock == 0) {
+            } else if($product->quantity <= 0) {
 
                 return $this->sendError(__('app.sold_out'), Response::HTTP_INTERNAL_SERVER_ERROR);
             }

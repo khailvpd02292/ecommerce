@@ -19,6 +19,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'shirts',
             'price' => '500',
+            'pre_tax_price' => '500',
+            'quantity' => '500',
             'category_id' => 1,
             'description' => $description,
             'created_at' => now(),
@@ -28,6 +30,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'jeans',
             'price' => '500',
+            'pre_tax_price' => '500',
+            'quantity' => '500',
             'category_id' => 1,
             'description' => $description,
             'created_at' => now(),
@@ -37,6 +41,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IP4',
             'price' => '50000',
+            'pre_tax_price' => '50000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => now(),
@@ -46,6 +52,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'samsung',
             'price' => '70000',
+            'pre_tax_price' => '70000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => now(),
@@ -55,6 +63,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IP5',
             'price' => '60000',
+            'pre_tax_price' => '60000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => now(),
@@ -64,6 +74,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IP6',
             'price' => '70000',
+            'pre_tax_price' => '70000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => now(),
@@ -73,6 +85,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IP7',
             'price' => '80000',
+            'pre_tax_price' => '80000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => now(),
@@ -82,6 +96,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IP8',
             'price' => '70000',
+            'pre_tax_price' => '70000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => now(),
@@ -91,6 +107,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IP8',
             'price' => '70000',
+            'pre_tax_price' => '70000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => now(),
@@ -100,6 +118,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IPX',
             'price' => '70000',
+            'pre_tax_price' => '70000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => '2022-01-01',
@@ -109,6 +129,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IPXS',
             'price' => '100000',
+            'pre_tax_price' => '100000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => '2021-04-05',
@@ -118,6 +140,8 @@ class ProductSeeder extends Seeder
         DB::table('products')->insert([
             'name' => 'IPXR',
             'price' => '90000',
+            'pre_tax_price' => '90000',
+            'quantity' => '500',
             'category_id' => 5,
             'description' => $description,
             'created_at' => '2022-05-05',

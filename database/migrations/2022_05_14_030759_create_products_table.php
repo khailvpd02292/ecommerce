@@ -20,7 +20,8 @@ class CreateProductsTable extends Migration
             $table->text('description')->nullable();
             $table->string('api_id')->nullable();
             $table->bigInteger('price')->nullable();
-            $table->boolean('is_stock')->default(1);
+            $table->bigInteger('pre_tax_price')->nullable();
+            $table->bigInteger('quantity')->default(0);
             $table->tinyInteger('product_status_id')->default(1); // 1 draft, 2 public
             $table->unsignedInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
