@@ -17,7 +17,7 @@ class HomeController extends BaseController
             ->get();
 
         if(count($totalOrder) <= 0) {
-            $totalMoney = [
+            $totalOrder = [
                 [
                     "year" => 0 
                 ]
@@ -38,14 +38,14 @@ class HomeController extends BaseController
             ];
         }
 
-        $totalProduct = DB::table('order_items')
-            ->select(DB::raw('YEAR(created_at) year, MONTH(created_at) month'), DB::raw('SUM(quantity) as total'))
+        $totalProfit = DB::table('order_items')
+            ->select(DB::raw('YEAR(created_at) year, MONTH(created_at) month'), DB::raw('SUM(quantity * price) as total_price'), DB::raw('SUM(quantity * pre_tax_price) as total_pre_tax_price'))
             ->groupby('year','month')
             ->orderBy('month', 'asc')
             ->get();
 
-        if(count($totalProduct) <= 0) {
-            $totalMoney = [
+        if(count($totalProfit) <= 0) {
+            $totalProfit = [
                 [
                     "year" => 0 
                 ]
@@ -142,7 +142,7 @@ class HomeController extends BaseController
         foreach ($listMonth as $key => $item) {
             
             $month = null;
-            foreach ($totalProduct as  $value) {
+            foreach ($totalProfit as  $value) {
 
                 $exitMonth = false;
                 
@@ -155,7 +155,7 @@ class HomeController extends BaseController
                         
                         array_push($data['total_product'], 
                         [
-                            $item => $value->total
+                            $item => ($value->total_price - $value->total_pre_tax_price )
                         ]);
 
                         $exitMonth = true;

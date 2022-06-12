@@ -8,6 +8,7 @@ use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -55,24 +56,34 @@ class OrderController extends BaseController
             ]);
 
             foreach ($carts->cartItem as  $item) {
-                $this->orderItem->create([
-                    'product_id' => $item->product_id,
-                    'order_id' => $order->id,
-                    'product_name' => $item->product->name,
-                    'price' => $item->price,
-                    'quantity' => $item->quantity,
-                ]);
 
                 $product = $this->product->where('id', $item->product_id)->first();
 
                 if ($product) {
+
+                    $this->orderItem->create([
+                        'product_id' => $item->product_id,
+                        'order_id' => $order->id,
+                        'product_name' => $item->product->name,
+                        'price' => $item->price,
+                        'pre_tax_price' => $product->pre_tax_price,
+                        'quantity' => $item->quantity,
+                    ]);
+
                     $stock = $product->quantity - $item->quantity;
                     if ($stock <= 0) {
                         $stock = 0;
                     }
+
                     $product->update([
                         'quantity'  => $stock
                     ]);
+
+                } else {
+
+                    DB::rollBack();
+            
+                    return $this->sendError(__('app.system_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
                 }
 
             }
