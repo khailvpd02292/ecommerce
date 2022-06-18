@@ -53,10 +53,20 @@ class OrderController extends BaseController
                     ]);
                 }
                 
-                $order->update([
-                    'status' => 3,
-                    'cancel_by' => 0,
-                ]);
+                if (isset($request->reason)) {
+
+                    $order->update([
+                        'status' => 3,
+                        'reason' => $request->reason,
+                        'cancel_by' => 0,
+                    ]);
+                } else {
+
+                    $order->update([
+                        'status' => 3,
+                        'cancel_by' => 0,
+                    ]);
+                }
 
                 DB::commit();
 
