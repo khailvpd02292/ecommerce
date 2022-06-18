@@ -71,7 +71,11 @@ class User extends Authenticatable implements JWTSubject
     public function getInfo($id)
     {
 
-        $user = User::with(['order', 'order.orderItems', 'order.orderItems.product'])->where('id', $id)->first();
+        $user = User::with([
+            'order' => function ($q) {
+                $q->orderBy('created_at', 'desc');
+            },
+            'order.orderItems', 'order.orderItems.product'])->where('id', $id)->first();
 
         if (!empty($user)) {
 
@@ -80,16 +84,16 @@ class User extends Authenticatable implements JWTSubject
             foreach ($user->order as $order) {
 
                 if ($order->orderItems) {
-                    
+
                     foreach ($order->orderItems as $orderItem) {
-                        
+
                         if ($orderItem->product->image) {
 
-                            if(!in_array($orderItem->product->id, $ids)) {
+                            if (!in_array($orderItem->product->id, $ids)) {
 
                                 array_push($ids, $orderItem->product->id);
 
-                                $orderItem->product->image = config('app.url').'/storage/'.$orderItem->product->image;
+                                $orderItem->product->image = config('app.url') . '/storage/' . $orderItem->product->image;
                             }
                         }
                     }
