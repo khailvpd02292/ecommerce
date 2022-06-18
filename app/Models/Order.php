@@ -35,6 +35,10 @@ class Order extends Model
         return $this->hasMany(OrderItem::class, 'order_id', 'id');
     }
 
+    public function user() {
+        return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
     public function detail($id) {
         $result = Order::with(['orderItems', 'orderItems.product'])->where('id', $id)->first();
 

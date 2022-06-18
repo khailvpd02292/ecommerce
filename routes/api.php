@@ -59,7 +59,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'user'], function () {
 
             Route::get('/list', [UController::class, 'index']);
-            Route::post('/cancel-order', [UController::class, 'cancelOrder']);
             Route::get('/detail/{id}', [UController::class, 'show']);
         
         });
@@ -96,6 +95,7 @@ Route::group(['prefix' => 'user'], function () {
         Route::post('/update', [UserController::class, 'update']);
 
         Route::get('/check-stock', [ShoppingController::class, 'checkStock']);
+        Route::post('/cancel-order/{id}', [OrderController::class, 'cancelOrder']);
 
         Route::get('/cart', [ShoppingController::class, 'index']);
         Route::post('/transaction', [OrderController::class, 'store']);
