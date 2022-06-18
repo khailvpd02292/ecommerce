@@ -50,7 +50,7 @@ class OrderController extends BaseController
                 return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
             }
 
-            if ($order->status == 0 || $order->status == 1) {
+            if (($order->status == 0 || $order->status == 1) && $order->user_id == auth('users')->user()->id) {
 
                 $orderItems = $this->orderItem->getOrderItemById($id);
 
@@ -93,6 +93,9 @@ class OrderController extends BaseController
                         logger('không thể cập nhật status khi status hiện tại không bằng 1');
                         return $this->sendSuccessResponse(null, __('app.action_failed', ['action' => __('app.update'), 'attribute' => __('app.order')]));
                     }
+                } else if ($request->status == 1 || $request->status == 0) {
+
+                    return $this->sendSuccessResponse(null, __('app.action_failed', ['action' => __('app.update'), 'attribute' => __('app.order')]));
                 }
 
                 DB::commit();
