@@ -38,6 +38,7 @@ class OrderController extends BaseController
                 ]);
 
                 if ($validator->fails()) {
+                    
                     return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
                 }
 

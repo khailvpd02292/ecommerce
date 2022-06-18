@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\Auth\LoginController as AdminLoginControlle;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ExportController;
 use App\Http\Controllers\Admin\UserController as UController;
 use App\Http\Controllers\User\ProductController as PController;
 use App\Http\Controllers\User\UserController;
@@ -68,6 +69,7 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/list', [AOrderController::class, 'index']);
             Route::get('/detail/{id}', [AOrderController::class, 'show']);
             Route::post('/update-order/{id}', [AOrderController::class, 'update']);
+            Route::get('/export', [ExportController::class, 'export']);
         
         });
     });
