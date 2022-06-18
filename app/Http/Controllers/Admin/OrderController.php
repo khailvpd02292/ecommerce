@@ -45,7 +45,7 @@ class OrderController extends BaseController
 
             } else {
 
-                $orders = Order::with(['orderItems', 'orderItems.product'])->get();
+                $orders = Order::with(['orderItems', 'orderItems.product'])->orderBy('created_at', 'desc')->get();
             }
 
             return $this->sendSuccessResponse($orders, null);

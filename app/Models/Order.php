@@ -46,7 +46,7 @@ class Order extends Model
     }
 
     public function getOrderByStatus($status) {
-        $result = Order::with(['orderItems', 'orderItems.product'])->where('status', $status)->get();
+        $result = Order::with(['orderItems', 'orderItems.product'])->where('status', $status)->orderBy('created_at', 'desc')->get();
 
         return $result;
     }
