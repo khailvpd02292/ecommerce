@@ -41,8 +41,15 @@ class OrderController extends BaseController
 
             $order = $this->order->where('id', $id)->first();
 
+            $validator = Validator::make($request->all(), [
+                'status' => 'required|integer',
+            ]);
 
-            if ($order->status == 0) {
+            if ($validator->fails()) {
+                return $this->sendError($validator->errors()->first(), Response::HTTP_BAD_REQUEST);
+            }
+
+            if ($order->status == 0 || $order->status == 1) {
 
                 $orderItems = $this->orderItem->getOrderItemById($id);
 
@@ -53,19 +60,38 @@ class OrderController extends BaseController
                     ]);
                 }
                 
-                if (isset($request->reason)) {
+                if ($request->status == 3) {
+                    if ($order->status == 0) {
+                        if (isset($request->reason)) {
 
-                    $order->update([
-                        'status' => 3,
-                        'reason' => $request->reason,
-                        'cancel_by' => 0,
-                    ]);
-                } else {
+                            $order->update([
+                                'status' => 3,
+                                'reason' => $request->reason,
+                                'cancel_by' => 0,
+                            ]);
+                        } else {
+        
+                            $order->update([
+                                'status' => 3,
+                                'cancel_by' => 0,
+                            ]);
+                        }
+                    } else {
 
-                    $order->update([
-                        'status' => 3,
-                        'cancel_by' => 0,
-                    ]);
+                        logger('không thể hủy đơn hàng khi status hiện tại không bằng 0');
+                        return $this->sendSuccessResponse(null, __('app.action_failed', ['action' => __('app.update'), 'attribute' => __('app.order')]));
+                    }
+                } else if ($request->status == 2) {
+
+                    if ($order->status == 1) {
+                        $order->update([
+                            'status' => 2
+                        ]);
+                    } else {
+
+                        logger('không thể cập nhật status khi status hiện tại không bằng 1');
+                        return $this->sendSuccessResponse(null, __('app.action_failed', ['action' => __('app.update'), 'attribute' => __('app.order')]));
+                    }
                 }
 
                 DB::commit();
