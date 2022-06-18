@@ -11,6 +11,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
+use Validator;
 
 class OrderController extends BaseController
 {
