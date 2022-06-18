@@ -28,4 +28,9 @@ class OrderItem extends Model
     public function product() {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
+
+    public function getOrderItemById($idOrder) {
+
+        return $this->with(['product'])->where('order_id', $idOrder)->get();
+    }
 }

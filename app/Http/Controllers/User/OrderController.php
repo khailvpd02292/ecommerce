@@ -34,6 +34,48 @@ class OrderController extends BaseController
         $this->product = $product;
     }
 
+    public function cancelOrder(Request $request, $id) {
+        try {
+            
+            DB::beginTransaction();
+
+            $order = $this->order->where('id', $id)->first();
+
+
+            if ($order->status == 0) {
+
+                $orderItems = $this->orderItem->getOrderItemById($id);
+
+                foreach ($orderItems as $items) {
+                    $product = $this->product->where('id', $items->product->id)->first();
+                    $product->update([
+                        'quantity' => ($items->product->quantity + $items->quantity)
+                    ]);
+                }
+                
+                $order->update([
+                    'status' => 3,
+                    'cancel_by' => 0,
+                ]);
+
+                DB::commit();
+
+                return $this->sendSuccessResponse(null, __('app.action_success', ['action' => __('app.update'), 'attribute' => __('app.order')]));
+                
+            } else {
+
+                return $this->sendSuccessResponse(null, __('app.action_failed', ['action' => __('app.update'), 'attribute' => __('app.order')]));
+            }
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+            
+            logger($e->getMessage());
+            return $this->sendError(__('app.system_error'), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     public function store(Request $request) {
         try {
             

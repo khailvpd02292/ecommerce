@@ -26,6 +26,8 @@ class Order extends Model
         'total',
         'status',
         'payment_method',
+        'reason',
+        'cancel_by',
         'payment_date',
     ];
 
@@ -35,6 +37,12 @@ class Order extends Model
 
     public function detail($id) {
         $result = Order::with(['orderItems', 'orderItems.product'])->where('id', $id)->first();
+
+        return $result;
+    }
+
+    public function getOrderByStatus($status) {
+        $result = Order::with(['orderItems', 'orderItems.product'])->where('status', $status)->get();
 
         return $result;
     }

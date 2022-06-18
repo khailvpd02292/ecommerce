@@ -25,8 +25,9 @@ class HomeController extends BaseController
         }
 
         $totalMoney = DB::table('orders')
-            ->select(DB::raw('YEAR(payment_date) year, MONTH(payment_date) month'), DB::raw('SUM(total) as total'))
-            ->groupby('year','month')
+            ->select(DB::raw('YEAR(payment_date) year, MONTH(payment_date) month'), DB::raw('SUM(total) as total'), 'status')
+            ->groupby('year', 'month', 'status')
+            ->having('status', 2)
             ->orderBy('month', 'asc')
             ->get();
 
@@ -39,8 +40,10 @@ class HomeController extends BaseController
         }
 
         $totalProfit = DB::table('order_items')
-            ->select(DB::raw('YEAR(created_at) year, MONTH(created_at) month'), DB::raw('SUM(quantity * price) as total_price'), DB::raw('SUM(quantity * pre_tax_price) as total_pre_tax_price'))
-            ->groupby('year','month')
+            ->join('orders', 'orders.id', '=', 'order_items.order_id')
+            ->select('orders.status', DB::raw('YEAR(order_items.created_at) year, MONTH(order_items.created_at) month'), DB::raw('SUM(order_items.quantity * order_items.price) as total_price'), DB::raw('SUM(order_items.quantity * order_items.pre_tax_price) as total_pre_tax_price'))
+            ->groupby('year', 'month', 'orders.status')
+            ->having('orders.status', 2)
             ->orderBy('month', 'asc')
             ->get();
 

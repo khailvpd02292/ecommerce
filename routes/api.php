@@ -59,6 +59,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::group(['prefix' => 'user'], function () {
 
             Route::get('/list', [UController::class, 'index']);
+            Route::post('/cancel-order', [UController::class, 'cancelOrder']);
             Route::get('/detail/{id}', [UController::class, 'show']);
         
         });
