@@ -64,18 +64,17 @@ class ShoppingController extends BaseController
                         }
                     }
                 }
+                $total = 0;
+                foreach ($carts->cartItem as $item) {
+                    $total += ($item->price) * ($item->quantity);
+                }
+
+                $carts->update([
+                    'total_price' => $total,
+                ]);
+
+                $carts = $this->cart->getCart($user_id);
             }
-
-            $total = 0;
-            foreach ($carts->cartItem as $item) {
-                $total += ($item->price) * ($item->quantity);
-            }
-
-            $carts->update([
-                'total_price' => $total,
-            ]);
-
-            $carts = $this->cart->getCart($user_id);
 
             return $this->sendSuccessResponse($carts, null);
 
