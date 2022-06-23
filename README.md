@@ -12,12 +12,12 @@
     ```
 
 ### Step 4:
-    ```
+    `
     php artisan storage:link
-    ```
+    `
 
 ### Step 5: 
-    ```
+    ```shell
     Set email to .env (copy from .env.example and create schema mysql)
     MAIL_MAILER=smtp
     MAIL_HOST=smtp.gmail.com
@@ -31,12 +31,12 @@
 
 ### Step 6: setting DB
     ```
-- DB_CONNECTION=mysql
-- DB_HOST=127.0.0.1
-- DB_PORT=3306
-- DB_DATABASE=
-- DB_USERNAME=
-- DB_PASSWORD=
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=
+    DB_USERNAME=
+    DB_PASSWORD=
     ```
 
 ### Step 7: Generation APP key
